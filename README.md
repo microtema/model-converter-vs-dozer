@@ -1,13 +1,13 @@
 # Model converter vs others mappers...
 
-| Name | Feature | Description | Performance (1000) | Link |
-| --- | --- | --- | --- | --- |
-| model-converter | convert, update, support collections | pure java interface converter | 12 |
-| jmapper | map | pure java converter | 502 |
-| dozer | map | pure java interface converter | 253 |
-| orika | map | pure java interface converter | 631 |
-| mapstruct | convert, support collections | generated java converter from interface, Therefore, doing a refactoring will lead to a compile error | 20 |
-| Modelmapper | map | generated java converter from interface | 233 |
+| Name | Description | Performance (1000) | Link |
+| --- | --- | --- | --- |
+| model-converter | Reducing Boilerplate Code with pure java interface converter | 12 | [Docu](https://bitbucket.org/modelconverter/model-converter-api.git)
+| mapstruct | MapStruct is a code generator that greatly simplifies the implementation of mappings between Java bean types based on a convention over configuration approach | 14 | [Docu](https://mapstruct.org)
+| dozer | Dozer is a Java Bean to Java Bean mapper that recursively copies data from one object to another | 253 | [Docu](http://dozer.sourceforge.net/)
+| orika | Orika simpler, lighter and faster Java bean mapping | 631 | [Docu](https://orika-mapper.github.io/orika-docs/)
+| jmapper | With JMapper we have all the advantages of dynamic mapping with the performance of static code, with 0 memory consumption. | 502 | [Docu](https://jmapper-framework.github.io/jmapper-core/)
+| Modelmapper | Conversion to a destination type or property can be delegated to a Converter. Converters generally take the place of any implicit or explicit mappings between two types (see below for exceptions). | 233 | [Docu](http://modelmapper.org/user-manual/converters/)
 
 ## Model Converter
 

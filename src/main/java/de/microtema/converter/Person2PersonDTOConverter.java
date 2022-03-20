@@ -6,7 +6,6 @@ import de.microtema.model.Person;
 import de.microtema.model.converter.MetaConverter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor

@@ -59,11 +59,11 @@ class Person2PersonDTOConverterTest {
 
         long startTimeInMillis = System.currentTimeMillis();
 
-        List<PersonDTO> personDTOS = sut.convertList(persons, parent.getLastName());
+        List<PersonDTO> answer = sut.convertList(persons, parent.getLastName());
 
-        assertCollection(personDTOS);
+        assertCollection(answer);
 
-        assertEquals(persons.get(0).getPersonName(), personDTOS.get(0).getFirstName());
+        assertEquals(persons.get(0).getPersonName(), answer.get(0).getFirstName());
 
         long duration = System.currentTimeMillis() - startTimeInMillis;
 
@@ -78,11 +78,11 @@ class Person2PersonDTOConverterTest {
 
         Person2PersonDTOMapper sut = Mappers.getMapper(Person2PersonDTOMapper.class);
 
-        List<PersonDTO> personDTOS = sut.convertToList(persons, parent);
+        List<PersonDTO> answer = sut.convertToList(persons, parent);
 
-        assertCollection(personDTOS);
+        assertCollection(answer);
 
-        //assertEquals(persons.get(0).getLastName(), personDTOS.get(0).getLastName());
+        //assertEquals(persons.get(0).getLastName(), answer.get(0).getLastName());
 
         long duration = System.currentTimeMillis() - startTimeInMillis;
 

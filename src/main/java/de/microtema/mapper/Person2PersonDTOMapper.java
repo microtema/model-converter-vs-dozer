@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(uses = {Address2AddressDTOMapper.class, Enum2StringMapper.class}, imports = {ZonedDateTime.class, ZoneId.class, DateTimeFormatter.class})
 public interface Person2PersonDTOMapper {
@@ -28,7 +29,10 @@ public interface Person2PersonDTOMapper {
 
             // qualifier
             @Mapping(target = "children", source = "parent", qualifiedByName = "mapParentChildren"), // default value is ignored on null parent
-            @Mapping(target = "lastName", source = "parent", qualifiedByName = "mapParentName"), // default value is ignored on null parent
+            @Mapping(target = "lastName", source = "parent.lastName", qualifiedByName = "mapParentName"), // default value is ignored on null parent
+
+            // delegate
+            @Mapping(target = "addresses", source = "person.addressList"),
 
             // default values
             @Mapping(target = "jobTitle", ignore = true), // explicit declaring
@@ -38,35 +42,30 @@ public interface Person2PersonDTOMapper {
     })
     PersonDTO convert(Person person, Person parent);
 
-    List<PersonDTO> convertToList(Collection<Person> persons); // return null instead of empty List on null persons
+    default List<PersonDTO> convertToList(Collection<Person> persons, Person parent) { // return null instead of empty List on null persons
 
-    default List<PersonDTO> convertToList(Collection<Person> persons, Person parent) {
-
-        List<PersonDTO> personDTOS = convertToList(persons);
-
-        personDTOS.forEach(it -> it.setLastName(mapParentName(parent)));
-        personDTOS.forEach(it -> it.getChildren().forEach(c -> c.setLastName(it.getLastName())));
-
-        return personDTOS;
+        return persons.stream().map(it -> convert(it, parent)).collect(Collectors.toList());
     }
 
     @Named("personName")
-    default String mapParentName(Person person) {
+    default String mapParentName(String parentLastName) {
 
-        if (person == null) {
+        if (parentLastName == null) {
             return "unknown";
         }
 
-        return person.getLastName();
+        return parentLastName;
     }
 
     @Named("mapParentChildren")
     default List<PersonDTO> mapParentChildren(Person person) {
 
-        if (person == null) {
+        List<Person> children = person.getChildren();
+
+        if (children == null) {
             return Collections.emptyList();
         }
 
-        return convertToList(person.getChildren(), person);
+        return children.stream().map(it -> convert(it, it)).collect(Collectors.toList());
     }
 }

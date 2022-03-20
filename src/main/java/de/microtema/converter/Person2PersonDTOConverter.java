@@ -16,7 +16,7 @@ public class Person2PersonDTOConverter implements MetaConverter<PersonDTO, Perso
     private final Address2AddressDTOConverter address2AddressDTOConverter;
 
     @Override
-    public PersonDTO convert(Person orig, String parentName) {
+    public PersonDTO convert(Person orig, String familyName) {
 
         if (orig == null) {
             return null;
@@ -36,10 +36,10 @@ public class Person2PersonDTOConverter implements MetaConverter<PersonDTO, Perso
         dest.setAddresses(address2AddressDTOConverter.convertList(orig.getAddressList()));
 
         // custom handling
-        dest.setLastName(Optional.ofNullable(parentName).orElse("unknown"));
+        dest.setLastName(Optional.ofNullable(familyName).orElse("unknown"));
 
         // nested collections
-        dest.setChildren(convertList(orig.getChildren(), dest.getLastName()));
+        dest.setChildren(convertList(orig.getChildren(), familyName));
 
         return dest;
     }

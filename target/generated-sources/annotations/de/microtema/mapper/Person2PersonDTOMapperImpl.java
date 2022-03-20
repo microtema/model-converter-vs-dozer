@@ -1,6 +1,8 @@
 package de.microtema.mapper;
 
+import de.microtema.dto.AddressDTO;
 import de.microtema.dto.PersonDTO;
+import de.microtema.model.Address;
 import de.microtema.model.Person;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -9,14 +11,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.Generated;
+import org.mapstruct.factory.Mappers;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-03-20T09:59:51+0100",
+    date = "2022-03-20T12:35:39+0100",
     comments = "version: 1.3.0.Beta2, compiler: javac, environment: Java 1.8.0_282 (AdoptOpenJDK)"
 )
 public class Person2PersonDTOMapperImpl implements Person2PersonDTOMapper {
 
+    private final Address2AddressDTOMapper address2AddressDTOMapper = Mappers.getMapper( Address2AddressDTOMapper.class );
     private final Enum2StringMapper enum2StringMapper = new Enum2StringMapper();
 
     @Override
@@ -29,6 +33,7 @@ public class Person2PersonDTOMapperImpl implements Person2PersonDTOMapper {
 
         if ( person != null ) {
             personDTO.setFirstName( person.getPersonName() );
+            personDTO.setAddresses( addressListToAddressDTOCollection( person.getAddressList() ) );
             personDTO.setDob( person.getDateOfBirth() );
             personDTO.setGenreName( enum2StringMapper.convert( person.getGenre() ) );
             personDTO.setId( person.getPersonId() );
@@ -36,7 +41,7 @@ public class Person2PersonDTOMapperImpl implements Person2PersonDTOMapper {
             personDTO.setEmail( person.getEmailAddress() );
         }
         if ( parent != null ) {
-            personDTO.setLastName( mapParentName( parent ) );
+            personDTO.setLastName( mapParentName( parent.getLastName() ) );
             personDTO.setChildren( mapParentChildren( parent ) );
         }
         personDTO.setCreatedDate( ZonedDateTime.now(ZoneId.of("CET")).format(DateTimeFormatter.ISO_DATE_TIME) );
@@ -44,30 +49,16 @@ public class Person2PersonDTOMapperImpl implements Person2PersonDTOMapper {
         return personDTO;
     }
 
-    @Override
-    public List<PersonDTO> convertToList(Collection<Person> persons) {
-        if ( persons == null ) {
+    protected Collection<AddressDTO> addressListToAddressDTOCollection(List<Address> list) {
+        if ( list == null ) {
             return null;
         }
 
-        List<PersonDTO> list = new ArrayList<PersonDTO>( persons.size() );
-        for ( Person person : persons ) {
-            list.add( personToPersonDTO( person ) );
+        Collection<AddressDTO> collection = new ArrayList<AddressDTO>( list.size() );
+        for ( Address address : list ) {
+            collection.add( address2AddressDTOMapper.convert( address ) );
         }
 
-        return list;
-    }
-
-    protected PersonDTO personToPersonDTO(Person person) {
-        if ( person == null ) {
-            return null;
-        }
-
-        PersonDTO personDTO = new PersonDTO();
-
-        personDTO.setLastName( person.getLastName() );
-        personDTO.setChildren( convertToList( person.getChildren() ) );
-
-        return personDTO;
+        return collection;
     }
 }

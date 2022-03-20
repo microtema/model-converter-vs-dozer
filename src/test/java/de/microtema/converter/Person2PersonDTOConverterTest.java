@@ -55,11 +55,11 @@ class Person2PersonDTOConverterTest {
     @Test
     void modelConverter() {
 
-        MetaConverter<PersonDTO, Person, String> sut = ClassUtil.createInstance(Person2PersonDTOConverter.class);
+        MetaConverter<PersonDTO, Person, Person> sut = ClassUtil.createInstance(Person2PersonDTOConverter.class);
 
         long startTimeInMillis = System.currentTimeMillis();
 
-        List<PersonDTO> answer = sut.convertList(persons, parent.getLastName());
+        List<PersonDTO> answer = sut.convertList(persons, parent);
 
         assertCollection(answer);
 

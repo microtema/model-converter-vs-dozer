@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class Person2PersonDTOConverter implements MetaConverter<PersonDTO, Person, String> {
+public class Person2PersonDTOConverter implements MetaConverter<PersonDTO, Person, Person> {
 
     private final Enum2StringMapper enum2StringMapper;
     private final Address2AddressDTOConverter address2AddressDTOConverter;
 
     @Override
-    public PersonDTO convert(Person orig, String familyName) {
+    public PersonDTO convert(Person orig, Person parent) {
 
         if (orig == null) {
             return null;
@@ -36,10 +36,10 @@ public class Person2PersonDTOConverter implements MetaConverter<PersonDTO, Perso
         dest.setAddresses(address2AddressDTOConverter.convertList(orig.getAddressList()));
 
         // custom handling
-        dest.setLastName(Optional.ofNullable(familyName).orElse("unknown"));
+        dest.setLastName(Optional.ofNullable(parent).map(Person::getLastName).orElse("unknown"));
 
         // nested collections
-        dest.setChildren(convertList(orig.getChildren(), familyName));
+        dest.setChildren(convertList(orig.getChildren(), orig));
 
         return dest;
     }
